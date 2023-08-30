@@ -1,9 +1,9 @@
 # Bot de Vagas de Emprego 🤖💼
 
-![GitHub](https://img.shields.io/github/license/lucelhosilva/teste)
-![GitHub stars](https://img.shields.io/github/stars/lucelhosilva/teste)
-![GitHub forks](https://img.shields.io/github/forks/lucelhosilva/teste)
-![GitHub issues](https://img.shields.io/github/issues/lucelhosilva/teste)
+![GitHub](https://img.shields.io/github/license/lucelhosilva/Bot_Vagas_de_Emprego)
+![GitHub stars](https://img.shields.io/github/stars/lucelhosilva/Bot_Vagas_de_Emprego)
+![GitHub forks](https://img.shields.io/github/forks/lucelhosilva/Bot_Vagas_de_Emprego)
+![GitHub issues](https://img.shields.io/github/issues/lucelhosilva/Bot_Vagas_de_Emprego)
 
 O Bot de Vagas de Emprego é uma ferramenta automatizada que traz informações atualizadas sobre vagas de emprego de um site específico diretamente para o seu servidor do Discord.
 
