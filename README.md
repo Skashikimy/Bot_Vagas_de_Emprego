@@ -63,7 +63,7 @@ O projeto foi desenvolvido utilizando Python e as seguintes bibliotecas:
 
 ## Licença 📜
 
-Este projeto está sob a ![GitHub](https://img.shields.io/github/license/lucelhosilva/teste).
+Este projeto está sob a ![GitHub](https://img.shields.io/github/license/lucelhosilva/Bot_Vagas_de_Emprego).
 
 ## Contato 📧
 
