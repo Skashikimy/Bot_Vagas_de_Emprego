@@ -4,32 +4,48 @@ from discord.ext import commands
 import aiohttp
 import bs4
 import re
-
-# Importa a função para obter links das vagas do módulo "programathor"
 from links.programathor import get_programathor_links
 
-# Define as intenções necessárias para o bot
+# Definindo Intenções para o Bot
 intents = discord.Intents.default()
 intents.message_content = True
 
-# Criação do bot com o prefixo de comando e as intenções definidas
+# Criação do Bot
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# ID do canal específico onde as mensagens serão enviadas
-canal_id = 1146495292292743188
+# ID do Canal Específico para Envio de Mensagens
+canal_id = 1147029744043442287
 
-# Lista para armazenar os links das vagas já enviadas
+# Lista para Armazenar Links de Vagas já Enviadas
 vagas_enviadas = []
 
-# Função para obter o HTML de um link
 async def get_html(link: str):
+
+    '''
+    Obtém o HTML de uma página da web a partir de um link.
+    
+    Parâmetros:
+    link (str): URL da página da web a ser obtida.
+    
+    Retorna:
+    str: Conteúdo HTML da página da web.
+    '''
+
     async with aiohttp.ClientSession() as request:
         async with request.get(link) as resp:
             resp.raise_for_status()
             return await resp.text()
 
-# Função para extrair informações da vaga a partir do HTML
 def get_job_info(html: str):
+    '''
+    Extrai informações da vaga de um conteúdo HTML específico.
+    
+    Parâmetros:
+    html (str): Conteúdo HTML da página da vaga.
+    
+    Retorna:
+    str: Informações da vaga formatadas.
+    '''
     soup = bs4.BeautifulSoup(html, "html.parser")
 
     # Extrai informações da empresa, título, descrição da vaga e link
@@ -41,8 +57,10 @@ def get_job_info(html: str):
     result = f"{company}\n{title}\n{job}\n{link}"
     return result
 
-# Função assíncrona para pesquisar vagas e enviar para o canal
 async def search_and_send_vacancies():
+    """
+    Pesquisa vagas periodicamente e envia para um canal específico.
+    """
     await bot.wait_until_ready()  # Espera o bot estar pronto
     
     channel = bot.get_channel(canal_id)  # Obtém o canal pelo ID
@@ -71,11 +89,10 @@ async def search_and_send_vacancies():
         # Aguarda por 2 minutos antes da próxima busca
         await asyncio.sleep(120)
 
-# Adiciona a função de pesquisa e envio de vagas como um evento
+# Adiciona a Função de Pesquisa e Envio de Vagas como um Evento
 @bot.event
 async def on_ready():
     bot.loop.create_task(search_and_send_vacancies())
 
-# Inicializa o bot com o token fornecido
-bot.run('MTE0NTAxODA0ODEyNjkyMjc1NA.GWQMke.jzqOF7W8jvV8zcdCO8MLbEf2rs-KmOyfwY6mxg')
-
+# Inicializa o Bot com o Token Fornecido
+bot.run('Token')
