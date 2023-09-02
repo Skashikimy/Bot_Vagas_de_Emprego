@@ -52,6 +52,8 @@ Para utilizar o Bot de Vagas de Emprego, siga estas etapas:
 
 - No arquivo do bot, adicione o seu token e o ID do canal onde deseja receber as mensagens.
 
+- Execute o arquivo do bot.
+
 ## Tecnologias Utilizadas 🚀
 
 O projeto foi desenvolvido utilizando Python e as seguintes bibliotecas:
