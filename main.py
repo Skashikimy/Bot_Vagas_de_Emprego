@@ -1,9 +1,11 @@
 import discord
+import keyring
 import asyncio
 from discord.ext import commands
 import aiohttp
 import bs4
 import re
+import keyring
 from links.programathor import get_programathor_links
 
 # Definindo Intenções para o Bot
@@ -13,8 +15,8 @@ intents.message_content = True
 # Criação do Bot
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# ID do Canal Específico para Envio de Mensagens
-canal_id = 1147029744043442287
+# ID do Canal Específico para Envio de Mensagens 
+canal_id = int(keyring.get_password('discord', 'server-vagas'))
 
 # Lista para Armazenar Links de Vagas já Enviadas
 vagas_enviadas = []
@@ -49,7 +51,8 @@ def get_job_info(html: str):
     soup = bs4.BeautifulSoup(html, "html.parser")
 
     # Extrai informações da empresa, título, descrição da vaga e link
-    company = soup.select_one('.wrapper-content-job-show').get_text().replace('\n', '').strip()
+    title = soup.select_one('cell-list a').get_text().replace('\n', '').strip()
+    company = soup.select_one('').get_text().replace('\n', '').strip()
     title = soup.select_one('.wrapper-header-job-show > .container').get_text().replace('\n', '').strip()
     job = re.sub('\n\s*\n', '\n\n', soup.select_one('.line-height-2-4').get_text())
     link = soup.find('meta', {'property': 'og:url'}).get('content')
@@ -95,4 +98,4 @@ async def on_ready():
     bot.loop.create_task(search_and_send_vacancies())
 
 # Inicializa o Bot com o Token Fornecido
-bot.run('Token')
+bot.run(keyring.get_password('discord', 'token'))
