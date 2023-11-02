@@ -2,7 +2,6 @@ import aiohttp
 import bs4
 import re
 
-
 async def get_programathor_links():
     jobs_url = 'https://programathor.com.br/jobs'
     base_url = 'https://programathor.com.br'

@@ -1,5 +1,4 @@
 import discord
-import keyring
 import asyncio
 from discord.ext import commands
 import aiohttp
