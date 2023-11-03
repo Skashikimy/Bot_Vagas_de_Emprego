@@ -1,43 +1,56 @@
-import aiohttp
+import httpx
 from bs4 import BeautifulSoup
-import re
+import asyncio
 
-async def get_job_cards():
+def check_none(value) -> str:
+    '''
+    DOCSTRING
+    '''
+    
+    if value == None:
+        return 'Não informado'
+    else:
+        return value.get_text(strip=True)
+
+async def get_programathor_jobs() -> list:
+    '''
+    DOCSTRING
+    '''
+
     base_url = 'https://programathor.com.br'
+    jobs = []
 
-    print('\nBuscando vagas em Programathor...')
+    for page in range(1,21):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f'{base_url}/jobs/page/{page}')
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            cells = soup.find_all('div', class_='cell-list')
+            for cell in cells:
+                title = cell.find('h3')
+                if title == None or title.text.startswith('Vencida'):
+                    continue
+                code = int(''.join(cell.find('a')['href'].split('/jobs/')[1].split('-')[0]))    # Utilizado para verificar repetição de envio do bot no Discord
+                title = title.get_text(strip=True)
+                company = check_none(cell.find('span'))
+                location = check_none(cell.find('span').find_next_sibling())
+                link = base_url + cell.find('a')['href']
 
-    async with aiohttp.ClientSession() as session:
-        async with session.get(base_url+'/jobs') as response:
-            response.raise_for_status()
-            html = await response.text()
-            soup = BeautifulSoup(html, "html.parser")
-            print(soup)
+                job = [code, title, company, location, link]
 
-def get_job_info(html: str):
-    '''
-    Extrai informações da vaga de um conteúdo HTML específico.
-    
-    Parâmetros:
-    html (str): Conteúdo HTML da página da vaga.
-    
-    Retorna:
-    str: Informações da vaga formatadas.
-    '''
-    soup = BeautifulSoup(html, "html.parser")
+                jobs.append(job)
+        
+    return jobs
 
-    print(soup)
+# O código abaixo possui função apenas para teste, não sendo necessário no release
+# O asyncio.run deve ser invocado pelo bot do Discord
 
-    # Extrai informações da empresa, título, descrição da vaga e link
-    link = soup.select_one('a[href^="/jobs/"]').get('href')                     # ^ operador usado para selecionar atributo começa com um valor específico
-    title = soup.select_one('h3.text-24').get_text().replace('\n', '').strip()  
-    company = soup.select_one('.cell-list-content-icon > span:nth-child(1)').get_text().replace('\n', '').strip()
-    location = soup.select_one('.cell-list-content-icon > span:nth-child(2)').get_text().replace('\n', '').strip()
-    level = soup.select_one('.cell-list-content-icon > span:nth-child(5)').get_text().replace('\n', '').strip()
-    regime = soup.select_one('.cell-list-content-icon > span:nth-child(6)').get_text().replace('\n', '').strip()
-    skills = soup.select_one()
+resultados = asyncio.run(get_programathor_jobs())
 
-    result = f"{link}\n{title}\n{company}\n{location}\n{level}\n{regime}\n{skills}"
-    return result
-
-get_job_cards()
+for resultado in resultados:
+    print('-'*50)
+    print(f'Título da Vaga: {resultado[1]}')
+    print(f'Empresa: {resultado[2]}')
+    print(f'Local: {resultado[3]}')
+    print(f'Link: {resultado[4]}')
+    print('-'*50+'\n')
